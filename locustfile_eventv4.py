@@ -173,7 +173,84 @@ EVENTS_LIST = [
         "api" : "/api/v4/events",
         "d_appVersion" : "4.3.2",
         "user" : "5a2c9d48b5cc21289c5ad8b3"
+    },
+    {
+        "url" : "http://android-api-v5-0.yangcong345.com/progresses/themes/1ae77d70-57f7-11e7-b717-df8d59af2a7e",
+        "ua" : "okhttp/3.4.2",
+        "device" : "866092023705205",
+        "eventTime" : 1514449784683,
+        "ip" : "123.117.181.118",
+        "os" : "android",
+        "user" : "5a20b0fadcd257128d32b455",
+        "role" : "student",
+        "category" : "onionsBackend_v5",
+        "platform" : "backend",
+        "eventKey" : "getThemeProgress",
+        "response" : {
+            "id" : "1ae77d70-57f7-11e7-b717-df8d59af2a7e",
+            "state" : "entered",
+            "topics" : [ 
+                {
+                    "id" : "6608bed6-57f7-11e7-ab6c-d338bc1885fc",
+                    "_id" : "568f61f55f1cac5d13af620b",
+                    "state" : "unfinished",
+                    "video" : {
+                        "state" : "unentered"
+                    },
+                    "practice" : {
+                        "state" : "unentered"
+                    }
+                }, 
+                {
+                    "id" : "6609f454-57f7-11e7-ab6d-db7136644a2b",
+                    "_id" : "56a1bb82bb03fe7b792d03e8",
+                    "state" : "unfinished",
+                    "video" : {
+                        "state" : "unentered"
+                    },
+                    "practice" : {
+                        "state" : "unentered"
+                    }
+                }, 
+                {
+                    "id" : "660b38d2-57f7-11e7-ab6e-4732f838536d",
+                    "_id" : "569870a6d9907f110e5a669a",
+                    "state" : "unfinished",
+                    "video" : {
+                        "state" : "unentered"
+                    },
+                    "practice" : {
+                        "state" : "unentered"
+                    }
+                }, 
+                {
+                    "id" : "660c7e54-57f7-11e7-ab6f-4f616ab2b9c5",
+                    "_id" : "569870bbd9907f110e5a669b",
+                    "state" : "unfinished",
+                    "video" : {
+                        "state" : "unentered"
+                    },
+                    "practice" : {
+                        "state" : "unentered"
+                    }
+                }, 
+                {
+                    "id" : "660dc192-57f7-11e7-ab70-e70e07fa0a13",
+                    "_id" : "56a96ca3bb03fe7b792d053e",
+                    "state" : "unfinished",
+                    "video" : {
+                        "state" : "unentered"
+                    },
+                    "practice" : {
+                        "state" : "unentered"
+                    }
+                }
+            ]
+        },
+        "request" : {},
+        "httpStatus" : "200",
     }
+
 ]
 
 
@@ -183,7 +260,8 @@ def request_header():
     """
     return {
         "Content-Type": "application/json",
-        "timestamp": str(int(time.time())),
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36",
+        "ntime": str(int(time.time())),
         "uuid": str(uuid.uuid4()),
     }
 
@@ -212,7 +290,10 @@ class UserBehavior(TaskSet):
         """ Send single event """
         req_header = request_header()
         req_body = request_body(req_header["uuid"], "single")
-        req_header["remoteip"] = req_body["ip"]
+        if random.randint(0, len(EVENTS_LIST) - 1) == 1:
+            req_header["x-forwarded-for"] = req_body["ip"]
+        else:
+            req_header["remoteip"] = req_body["ip"]
         data = json.dumps(req_body)
         response = self.client.request(
             method="POST",
@@ -234,7 +315,10 @@ class UserBehavior(TaskSet):
         """ Send batch events """
         req_header = request_header()
         req_body = request_body(req_header["uuid"], "single")
-        req_header["remoteip"] = req_body["ip"]
+        if random.randint(0, len(EVENTS_LIST) - 1) == 1:
+            req_header["x-forwarded-for"] = req_body["ip"]
+        else:
+            req_header["remoteip"] = req_body["ip"]
         batch_data = []
         batch_data.append(req_body)
         batch_data = batch_data * random.randint(1, 6)
