@@ -1,35 +1,33 @@
-# Locust for bd_event
+# Locust for bd_eventreceiver
 
-To run Locust with the above Locust file, if it was named 
-locustfile.py and located in the current working directory, 
-we could run:
+本测试用例仅针对bd_eventreceiver v4版本API。首先应当部署启动好bd_eventreceiver到9998。
 
-```shell
-locust -f locust_files/my_locust_file.py --host=http://example.com
-```
-
-To run Locust distributed across multiple processes we would 
-start a master process by specifying --master:
+## 单机压测
 
 ```shell
-locust -f locust_files/my_locust_file.py --master --host=http://example.com
+locust -f locustfile_eventv4.py --host="http://localhost:9998"
 ```
 
-and then we would start an arbitrary number of slave processes:
+## 并行压测
+
+首先启动master进程
 
 ```shell
-locust -f locust_files/my_locust_file.py --slave --host=http://example.com
+locust -f locustfile_eventv4.py --master --host="http://localhost:9998"
 ```
 
-If we want to run Locust distributed on multiple machines 
-we would also have to specify the master host when starting 
-the slaves (this is not needed when running Locust distributed 
-on a single machine, since the master host defaults to 127.0.0.1):
+然后启动slave进程
 
 ```shell
-locust -f locust_files/my_locust_file.py --slave --master-host=192.168.0.100 --host=http://example.com
+locust -f locustfile_eventv4.py --slave --host="http://localhost:9998"
 ```
 
-Once you’ve started Locust using one of the above command lines, 
-you should open up a browser and point it to 
-`http://127.0.0.1:8089` (if you are running Locust locally). 
+如过想在分布式集群内进行部署压测，首先开启主节点master进程，然后启动slave指定master节点的IP
+
+```shell
+locust -f locustfile_eventv4.py --slave --master-host=10.8.8.111 --host="http://localhost:9998"
+```
+
+在启动master的节点上可以访问到locust的web操作界面：
+
+[http://127.0.0.1:8089](http://127.0.0.1:8089)
