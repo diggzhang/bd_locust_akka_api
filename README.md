@@ -28,6 +28,13 @@ locust -f locustfile_eventv4.py --slave --host="http://localhost:9998"
 locust -f locustfile_eventv4.py --slave --master-host=10.8.8.111 --host="http://localhost:9998"
 ```
 
+## 测试配置
+
 在启动master的节点上可以访问到locust的web操作界面：
 
 [http://127.0.0.1:8089](http://127.0.0.1:8089)
+
+鉴于我们的线上业务场景是短连接形式：
+
+`Number of users to simulate` 设置 300
+`Hatch rate (users spawned/second)` 设置 10
